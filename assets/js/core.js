@@ -95,6 +95,13 @@
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             setMessage(messageEl, '', true);
+            form.classList.add('is-submitting');
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const btnOriginal = submitBtn ? submitBtn.innerHTML : '';
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = 'Processing...';
+            }
 
             try {
                 const response = await fetch(form.action, {
@@ -120,6 +127,12 @@
                 }
             } catch (error) {
                 setMessage(messageEl, 'Unable to submit right now. Please try again.', false);
+            } finally {
+                form.classList.remove('is-submitting');
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = btnOriginal;
+                }
             }
         });
     };
