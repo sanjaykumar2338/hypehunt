@@ -19,7 +19,7 @@ header('Content-Disposition: attachment; filename="' . $filename . '"');
 $output = fopen('php://output', 'w');
 
 if ($type === 'early_access') {
-    fputcsv($output, ['ID', 'First Name', 'Last Name', 'Email', 'Phone', 'Comments', 'IP Address', 'Created At']);
+    fputcsv($output, ['ID', 'First Name', 'Last Name', 'Email', 'Phone', 'Comments', 'IP Address', 'Confirm Email Sent', 'Unsubscribed', 'Unsubscribed At', 'Created At']);
     foreach ($rows as $row) {
         fputcsv($output, [
             $row['id'],
@@ -29,17 +29,23 @@ if ($type === 'early_access') {
             $row['phone'],
             $row['comments'],
             $row['ip_address'],
+            $row['confirm_email_sent'],
+            $row['is_unsubscribed'],
+            $row['unsubscribed_at'],
             $row['created_at'],
         ]);
     }
 } else {
-    fputcsv($output, ['ID', 'Email', 'User Type', 'IP Address', 'Created At']);
+    fputcsv($output, ['ID', 'Email', 'User Type', 'IP Address', 'Confirm Email Sent', 'Unsubscribed', 'Unsubscribed At', 'Created At']);
     foreach ($rows as $row) {
         fputcsv($output, [
             $row['id'],
             $row['email'],
             $row['user_type'],
             $row['ip_address'],
+            $row['confirm_email_sent'],
+            $row['is_unsubscribed'],
+            $row['unsubscribed_at'],
             $row['created_at'],
         ]);
     }

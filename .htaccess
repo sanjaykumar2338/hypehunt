@@ -5,6 +5,8 @@ RewriteEngine On
 
 # Default to public landing page when hitting the root.
 RewriteRule ^$ public/index.php [L]
+RewriteRule ^blog/?$ public/blog.php [L]
+RewriteRule ^blog/([a-zA-Z0-9-]+)/?$ public/blog_detail.php?slug=$1 [L,QSA]
 
 # Block direct access to internal folders.
 RewriteRule ^config/ - [F,L]

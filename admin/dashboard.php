@@ -31,7 +31,7 @@ $latestNotify = fetch_latest_notify_signups();
         <div class="table-wrapper">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h5 class="mb-0">Latest Early Access</h5>
-                <a href="<?php echo BASE_URL; ?>/admin/early_access.php" class="btn btn-sm btn-outline-primary">View All</a>
+                <a href="<?php echo $adminBase; ?>/admin/early_access.php" class="btn btn-sm btn-outline-primary">View All</a>
             </div>
             <div class="table-responsive">
                 <table class="table table-hover align-middle">
@@ -64,7 +64,7 @@ $latestNotify = fetch_latest_notify_signups();
         <div class="table-wrapper">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h5 class="mb-0">Latest Notify Signups</h5>
-                <a href="<?php echo BASE_URL; ?>/admin/notify.php" class="btn btn-sm btn-outline-primary">View All</a>
+                <a href="<?php echo $adminBase; ?>/admin/notify.php" class="btn btn-sm btn-outline-primary">View All</a>
             </div>
             <div class="table-responsive">
                 <table class="table table-hover align-middle">

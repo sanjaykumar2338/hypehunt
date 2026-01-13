@@ -32,11 +32,13 @@
 
         links.forEach((link) => {
             link.addEventListener('click', (e) => {
-                e.preventDefault();
                 const targetId = link.getAttribute('data-target');
-                scrollToSection(targetId);
-                menuBtn?.classList.remove('active');
-                slideMenu?.classList.remove('active');
+                if (targetId) {
+                    e.preventDefault();
+                    scrollToSection(targetId);
+                    menuBtn?.classList.remove('active');
+                    slideMenu?.classList.remove('active');
+                }
             });
         });
     };
@@ -74,7 +76,20 @@
         }
     };
 
-    const handleFormSubmit = (form, messageEl, modalEl) => {
+    const showConfirmation = (message) => {
+        const toast = document.getElementById('confirmationToast');
+        const text = document.getElementById('confirmationText');
+        if (!toast || !text) return;
+
+        text.textContent = message || 'Thanks for joining the HypeHunt waitlist!';
+        toast.classList.add('show');
+
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 5000);
+    };
+
+    const handleFormSubmit = (form, messageEl, modalEl, defaultMessage) => {
         if (!form) return;
 
         form.addEventListener('submit', async (e) => {
@@ -89,14 +104,19 @@
 
                 const data = await response.json();
                 const success = Boolean(data?.success);
-                setMessage(messageEl, data?.message || 'Something went wrong.', success);
-
+                const msgText = data?.message || defaultMessage || 'Something went wrong.';
                 if (success) {
+                    // Only show toast on success; keep the header message area empty.
+                    setMessage(messageEl, '', true);
+                    showConfirmation(msgText);
                     setTimeout(() => {
                         form.reset();
                         modalEl?.classList.remove('active');
                         setMessage(messageEl, '', true);
                     }, 2000);
+                } else {
+                    // Show error inline for failures.
+                    setMessage(messageEl, msgText, false);
                 }
             } catch (error) {
                 setMessage(messageEl, 'Unable to submit right now. Please try again.', false);
@@ -113,12 +133,14 @@
             document.getElementById('notifyForm'),
             document.getElementById('notifyMessage'),
             document.getElementById('customModal'),
+            'Thanks for joining the HypeHunt waitlist!',
         );
 
         handleFormSubmit(
             document.getElementById('earlyAccessForm'),
             document.getElementById('earlyMessage'),
             document.getElementById('earlyModal'),
+            'Thanks for joining the HypeHunt early access waitlist!',
         );
     });
 })();

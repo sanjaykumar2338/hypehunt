@@ -33,8 +33,6 @@ try {
         'user_type' => $userType,
         'ip' => $ipAddress,
     ]);
-
-    respond_json(true, "Thanks! You're on the launch list.");
 } catch (PDOException $e) {
     if ($e->getCode() === '23000') {
         respond_json(false, 'This email is already registered.', 409);
@@ -42,3 +40,24 @@ try {
 
     respond_json(false, 'Unable to save your signup right now.', 500);
 }
+
+// Keep token/email attempts from breaking a successful signup
+$token = null;
+try {
+    $token = create_unsubscribe_token($email, 'notify');
+} catch (Throwable $e) {
+    error_log('Notify token error: ' . $e->getMessage());
+}
+
+if ($token !== null) {
+    try {
+        $unsubscribeUrl = rtrim(BASE_URL, '/') . '/unsubscribe.php?token=' . urlencode($token);
+        $emailSent = send_confirmation_email($email, '', 'notify', $unsubscribeUrl);
+        update_confirmation_status('notify_signups', $email, $emailSent);
+    } catch (Throwable $e) {
+        error_log('Notify email/update error: ' . $e->getMessage());
+    }
+}
+
+$msg = "Thanks for joining the HypeHunt early access waitlist! Your spot is officially secured—no further action needed right now.";
+respond_json(true, $msg);

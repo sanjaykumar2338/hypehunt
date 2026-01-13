@@ -1,4 +1,12 @@
     </div> <!-- /.container-fluid -->
-    <script src="<?php echo BASE_URL; ?>/assets/js/bootstrap.bundle.min.js"></script>
+    <?php
+    $base = rtrim(BASE_URL, '/');
+    $adminBase = $base;
+    if (substr($base, -7) === '/public') {
+        $adminBase = substr($base, 0, -7);
+    }
+    $assetBase = $adminBase . '/assets';
+    ?>
+    <script src="<?php echo $assetBase; ?>/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

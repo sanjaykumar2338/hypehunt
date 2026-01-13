@@ -4,12 +4,17 @@ require_once __DIR__ . '/../includes/functions.php';
 
 ensure_session();
 
+$base = rtrim(BASE_URL, '/');
+$adminBase = $base;
+if (substr($base, -7) === '/public') {
+    $adminBase = substr($base, 0, -7);
+}
+$assetBase = $adminBase . '/assets';
+
 if (!empty($_SESSION['admin_logged_in'])) {
-    header('Location: ' . BASE_URL . '/admin/dashboard.php');
+    header('Location: ' . $adminBase . '/admin/dashboard.php');
     exit;
 }
-
-$assetBase = BASE_URL . '/assets';
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -27,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             session_regenerate_id(true);
             $_SESSION['admin_logged_in'] = true;
             $_SESSION['admin_username'] = $username;
-            header('Location: ' . BASE_URL . '/admin/dashboard.php');
+            header('Location: ' . $adminBase . '/admin/dashboard.php');
             exit;
         }
 
@@ -44,10 +49,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="<?php echo $assetBase; ?>/css/bootstrap.min.css">
     <style>
         body { background: #0f172a; color: #fff; }
-        .login-wrapper { min-height: 100vh; display: flex; align-items: center; justify-content: center; }
-        .login-card { background: #111827; padding: 32px; border-radius: 14px; width: 100%; max-width: 420px; box-shadow: 0 20px 60px rgba(0,0,0,0.35); }
+        .login-wrapper { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .login-card { background: #111827; padding: 36px; border-radius: 18px; width: 100%; max-width: 460px; box-shadow: 0 20px 60px rgba(0,0,0,0.35); }
         .form-control { background: #0b1220; border-color: #1f2937; color: #fff; }
         .form-control:focus { background: #0b1220; color: #fff; box-shadow: 0 0 0 0.25rem rgba(59,130,246,0.2); }
+        .btn-primary { background: #3DFF8E; border-color: #3DFF8E; color: #0f172a; font-weight: 700; }
+        .btn-primary:hover { background: #2ed676; border-color: #2ed676; color: #0f172a; }
     </style>
 </head>
 <body>
@@ -68,7 +75,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
                 <button type="submit" class="btn btn-primary w-100">Login</button>
             </form>
-            <p class="mt-3 text-muted text-center" style="font-size: 13px;">Default admin: admin / Admin@123</p>
         </div>
     </div>
     <script src="<?php echo $assetBase; ?>/js/bootstrap.bundle.min.js"></script>

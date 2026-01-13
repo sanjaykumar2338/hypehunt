@@ -5,17 +5,19 @@ require_once __DIR__ . '/../includes/header.php';
 $search = sanitize_text($_GET['search'] ?? '');
 $perPage = valid_per_page(isset($_GET['per_page']) ? (int) $_GET['per_page'] : 10);
 $page = current_page(isset($_GET['page']) ? (int) $_GET['page'] : 1);
+$flag = in_array(($_GET['filter'] ?? ''), ['unsubscribed', 'unsent'], true) ? $_GET['filter'] : null;
 
-$total = count_early_access($search);
+$total = count_early_access($search, $flag);
 $totalPages = max(1, (int) ceil($total / $perPage));
 $page = min($page, $totalPages);
 $offset = ($page - 1) * $perPage;
 
-$records = fetch_early_access($search, $perPage, $offset);
+$records = fetch_early_access($search, $perPage, $offset, $flag);
 
 $queryBase = http_build_query([
     'search' => $search,
     'per_page' => $perPage,
+    'filter' => $flag,
 ]);
 ?>
 
@@ -41,6 +43,14 @@ $queryBase = http_build_query([
             <?php endforeach; ?>
         </select>
     </div>
+    <div class="col-md-3 col-lg-2">
+        <label for="filter" class="form-label">Filter</label>
+        <select id="filter" name="filter" class="form-select">
+            <option value="" <?php echo $flag === null ? 'selected' : ''; ?>>All</option>
+            <option value="unsent" <?php echo $flag === 'unsent' ? 'selected' : ''; ?>>Confirm email not sent</option>
+            <option value="unsubscribed" <?php echo $flag === 'unsubscribed' ? 'selected' : ''; ?>>Unsubscribed</option>
+        </select>
+    </div>
     <div class="col-md-3 col-lg-2 d-flex align-items-end">
         <button type="submit" class="btn btn-primary w-100">Search</button>
     </div>
@@ -57,6 +67,9 @@ $queryBase = http_build_query([
                     <th scope="col">Phone</th>
                     <th scope="col">Comments</th>
                     <th scope="col">IP</th>
+                    <th scope="col">Confirm Email Sent</th>
+                    <th scope="col">Unsubscribed</th>
+                    <th scope="col">Unsubscribed At</th>
                     <th scope="col">Created</th>
                 </tr>
             </thead>
@@ -72,6 +85,9 @@ $queryBase = http_build_query([
                             <td><?php echo escape_html($row['phone']); ?></td>
                             <td><?php echo escape_html($row['comments']); ?></td>
                             <td><?php echo escape_html($row['ip_address']); ?></td>
+                            <td><?php echo $row['confirm_email_sent'] ? 'Yes' : 'No'; ?></td>
+                            <td><?php echo $row['is_unsubscribed'] ? 'Yes' : 'No'; ?></td>
+                            <td><?php echo escape_html($row['unsubscribed_at']); ?></td>
                             <td><?php echo escape_html($row['created_at']); ?></td>
                         </tr>
                     <?php endforeach; ?>

@@ -43,8 +43,6 @@ try {
         'comments' => $comments ?: null,
         'ip' => $ipAddress,
     ]);
-
-    respond_json(true, "Thanks! You're on the early access list.");
 } catch (PDOException $e) {
     if ($e->getCode() === '23000') {
         respond_json(false, 'This email is already registered.', 409);
@@ -52,3 +50,24 @@ try {
 
     respond_json(false, 'Unable to save your request right now.', 500);
 }
+
+// Keep token/email attempts from breaking a successful signup
+$token = null;
+try {
+    $token = create_unsubscribe_token($email, 'early_access');
+} catch (Throwable $e) {
+    error_log('Early access token error: ' . $e->getMessage());
+}
+
+if ($token !== null) {
+    try {
+        $unsubscribeUrl = rtrim(BASE_URL, '/') . '/unsubscribe.php?token=' . urlencode($token);
+        $emailSent = send_confirmation_email($email, "{$firstName} {$lastName}", 'early_access', $unsubscribeUrl);
+        update_confirmation_status('early_access', $email, $emailSent);
+    } catch (Throwable $e) {
+        error_log('Early access email/update error: ' . $e->getMessage());
+    }
+}
+
+$msg = "Thanks for joining the HypeHunt early access waitlist, {$firstName}! Your spot is officially secured—no further action needed right now.";
+respond_json(true, $msg);

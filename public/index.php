@@ -1,85 +1,17 @@
 <?php
-require_once __DIR__ . '/../config/config.php';
-$assetBase = BASE_URL . '/assets';
+$seo_title = 'Hype Hunt';
+require_once __DIR__ . '/../includes/site_header.php';
 ?>
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hype Hunt</title>
-
-    <!-- CSS Files -->
-    <link rel="stylesheet" href="<?php echo $assetBase; ?>/css/bootstrap.min.css">
-    <link rel="stylesheet" href="<?php echo $assetBase; ?>/css/core.css">
-    <link rel="stylesheet" href="<?php echo $assetBase; ?>/css/media.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="icon" href="<?php echo $assetBase; ?>/images/favicon.png" type="image/png">
     <style>
         .form-message { display: none; margin-bottom: 12px; padding: 10px 12px; border-radius: 10px; font-size: 14px; }
         .form-message.success { background: #e6ffed; color: #0f5132; border: 1px solid #badbcc; }
         .form-message.error { background: #ffe8e6; color: #842029; border: 1px solid #f5c2c7; }
+        .confirmation-toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(120%); background: rgba(16, 24, 40, 0.95); color: #e5e7eb; padding: 18px 20px; border-radius: 14px; box-shadow: 0 16px 40px rgba(0,0,0,0.35); max-width: 420px; width: 90%; z-index: 1000; transition: transform 0.35s ease, opacity 0.35s ease; opacity: 0; }
+        .confirmation-toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+        .confirmation-toast h4 { margin: 0 0 8px; font-size: 18px; color: #3DFF8E; }
+        .confirmation-toast p { margin: 0; line-height: 1.4; }
+        .confirmation-toast .toast-sub { color: #cbd5e1; font-size: 14px; margin-top: 6px; }
     </style>
-
-</head>
-
-<body>
-    <header class="header">
-        <div class="site-container header-container">
-
-            <!-- Logo -->
-            <div class="header-logo">
-                <a href="#">
-                    <img src="<?php echo $assetBase; ?>/images/site-logo.png" alt="Hype Hunt Logo">
-                </a>
-                <!-- Hamburger -->
-                <button id="mobile-menu">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
-            </div>
-
-            <!-- Navigation -->
-            <nav class="header-nav">
-                <ul class="header-nav-list">
-                    <li class="header-nav-item"><a href="#" class="header-nav-link" data-target="What-Is-It">What Is
-                            It</a></li>
-                    <li class="header-nav-item"><a href="#" class="header-nav-link" data-target="Who-It-s-For">Who It's
-                            For</a></li>
-                    <li class="header-nav-item"><a href="#" class="header-nav-link" data-target="Why-Different">Why
-                            Different</a></li>
-                    <li class="header-nav-item"><a href="#" class="header-nav-link" data-target="Features">Features</a>
-                    </li>
-                </ul>
-            </nav>
-
-            <!-- Header Button -->
-            <div class="header-btn-box">
-                <a href="javascript:void(0)" class="Hype-Root1 js-open-early">Get Early Access</a>
-            </div>
-
-        </div>
-    </header>
-
-
-    <!-- Mobile Slide Menu -->
-    <nav id="slideMenu">
-        <button id="closeSlideMenu"><i class="fa-solid fa-xmark"></i>
-        </button>
-
-        <ul class="header-nav-list">
-            <li class="header-nav-item"><a href="#" class="header-nav-link" data-target="What-Is-It">What Is It</a></li>
-            <li class="header-nav-item"><a href="#" class="header-nav-link" data-target="Who-It-s-For">Who It's For</a>
-            </li>
-            <li class="header-nav-item"><a href="#" class="header-nav-link" data-target="Why-Different">Why
-                    Different</a></li>
-            <li class="header-nav-item"><a href="#" class="header-nav-link" data-target="Features">Features</a></li>
-        </ul>
-    </nav>
-
-
 
     <section class="hero-block">
         <div class="site-container">
@@ -144,7 +76,7 @@ $assetBase = BASE_URL . '/assets';
 
             <h2>Get Notified</h2>
 
-            <form id="notifyForm" action="<?php echo BASE_URL; ?>/public/submit_notify.php" method="POST" novalidate>
+            <form id="notifyForm" action="<?php echo rtrim(BASE_URL, '/'); ?>/submit_notify.php" method="POST" novalidate>
                 <div class="form-message" id="notifyMessage" style="display:none;"></div>
 
                 <div class="input-root">
@@ -184,7 +116,7 @@ $assetBase = BASE_URL . '/assets';
 
             <h2>Join Early Access</h2>
 
-            <form id="earlyAccessForm" action="<?php echo BASE_URL; ?>/public/submit_early_access.php" method="POST" novalidate>
+            <form id="earlyAccessForm" action="<?php echo rtrim(BASE_URL, '/'); ?>/submit_early_access.php" method="POST" novalidate>
                 <div class="Access-form">
                     <div class="form-message" id="earlyMessage" style="display:none;"></div>
 
@@ -649,36 +581,4 @@ $assetBase = BASE_URL . '/assets';
         </div>
     </section>
 
-
-    <div class="site-footer">
-        <div class="footer-wrapper">
-
-            <div class="footer-brand">
-                <a href="#">
-                    <img src="<?php echo $assetBase; ?>/images/Frame (2).png" alt="Hype Hunt Logo">
-                </a>
-            </div>
-
-            <div class="footer-socials">
-                <a href="#"><img src="<?php echo $assetBase; ?>/images/SVG (24).png" alt="Instagram"></a>
-                <a href="#"><img src="<?php echo $assetBase; ?>/images/SVG (25).png" alt="Twitter"></a>
-                <a href="#"><img src="<?php echo $assetBase; ?>/images/SVG (26).png" alt="Message"></a>
-                <a href="#"><img src="<?php echo $assetBase; ?>/images/SVG (27).png" alt="Email"></a>
-            </div>
-
-            <ul class="footer-links">
-                <li class="footer-link"><a href="#">Privacy Policy</a></li>
-                <li class="footer-link"><a href="#">Terms of Use</a></li>
-                <li class="footer-copy">© Hype Hunt, 2026</li>
-            </ul>
-
-        </div>
-    </div>
-
-    <!-- JS Files -->
-    <script src="<?php echo $assetBase; ?>/js/jquery-3.7.1.min.js"></script>
-    <script src="<?php echo $assetBase; ?>/js/bootstrap.bundle.min.js"></script>
-    <script src="<?php echo $assetBase; ?>/js/core.js"></script>
-</body>
-
-</html>
+<?php require_once __DIR__ . '/../includes/site_footer.php'; ?>
